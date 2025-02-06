@@ -1,0 +1,83 @@
+#include <funzioni.h>
+#include <iostream>
+#include <string>
+using namespace std;
+
+void lettura(){
+	
+	string messaggio;
+	
+	ifstream fin ("msg.txt");
+	if (!fin){
+	cout<<"Errore nell ’apertura del file in lettura"<<endl;
+	}
+	fin >> messaggio;
+	fin.close();
+	
+} 
+
+void scrittura(string messaggio){
+	
+	ofstream fout (" frame.txt");
+	if (!fout ){
+	cout<<"Errore nell ’apertura del file in scrittura"<<endl;
+	}
+	fout << messaggio;
+	fout.close();
+	
+}
+
+string charToBin(char c){
+    string numBinario;
+    for(int i=7; i>=0; i--){
+        if(c&(1<<i)){
+            numBinario += '1';
+        }else{
+            numBinario += '0';
+        }
+    }
+    cout<<numBinario;
+}
+
+string stringToBin(string s){
+    string risultato;
+    for(char c : s){ // Itera su ogni carattere della stringa
+        for(int i=7; i>=0; i--){ 
+            if(c&(1<<i)){
+                risultato += '1';
+            }else{
+                risultato += '0';
+            }
+        }
+    }
+    cout<<risultato;
+}
+
+void creaDatagram(){
+    IpHeader header;
+    header.version_ihl = 0x45;           // IPv4 (4) + Lunghezza intestazione (5 parole da 32 bit)
+    header.type_of_service = 0;          // Tipo di servizio predefinito
+    header.total_length = 20;            // Lunghezza totale (20 byte per intestazione base)
+    header.identification = 12345;       // Identificazione arbitraria
+    header.flags_fragment_offset = 0;    // Flags e offset del frammento (nessun frammento)
+    header.time_to_live = 64;            // Time to Live (TTL) predefinito
+    header.protocol = 6;                 // Protocollo TCP (6)
+    header.header_checksum = 0;          // Checksum inizialmente a 0
+    header.source_address = 0xC0A80101;  // Indirizzo IP sorgente (192.168.1.1)
+    header.destination_address = 0xC0A80102; // Indirizzo IP destinazione (192.168.1.2)
+}
+
+void stampaHeader(const IpHeader& header){
+    cout << "Version + IHL: " << hex << header.version_ihl << endl;
+    cout << "Type of Service: " << dec << header.type_of_service << endl;
+    cout << "Total Length: " << header.total_length << endl;
+    cout << "Identification: " << header.identification << endl;
+    cout << "Flags + Fragment Offset: " << header.flags_fragment_offset << endl;
+    cout << "Time to Live: " << header.time_to_live << endl;
+    cout << "Protocol: " << header.protocol << endl;
+    cout << "Header Checksum: " << header.header_checksum << endl;
+    cout << "Source Address: " << hex << header.source_address << endl;
+    cout << "Destination Address: " << header.destination_address << endl;
+}
+
+
